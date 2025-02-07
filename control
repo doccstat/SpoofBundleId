@@ -1,0 +1,9 @@
+Package: com.lixingchi.spoofbundleid
+Name: SpoofBundleId
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Xingchi Li
+Author: Xingchi Li
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
