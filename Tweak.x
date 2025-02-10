@@ -1,34 +1,41 @@
-/* How to Hook with Logos
-Hooks are written with syntax similar to that of an Objective-C @implementation.
-You don't need to #include <substrate.h>, it will be done automatically, as will
-the generation of a class list and an automatic constructor.
+#import <Foundation/Foundation.h>
 
-%hook ClassName
+#define SPOOFED_BUNDLE_ID @"ORIGINAL_BUNDLE_ID"
 
-// Hooking a class method
-+ (id)sharedInstance {
-	return %orig;
+%hook NSBundle
+
+- (NSString *)bundleIdentifier {
+    // Use a static counter to track the number of spoofed returns.
+    static int spoofCount = 0;
+
+    // Get the original bundle identifier.
+    NSString *origBundleId = %orig;
+
+    // If the original bundle id matches our target and we haven't spoofed twice yet...
+    if ([origBundleId isEqualToString:@"REAL_BUNDLE_ID"] && spoofCount > -1) {
+        spoofCount++;
+        NSLog(@"Spoofing bundle ID from %@ to %@ (spoof count: %d)", origBundleId, SPOOFED_BUNDLE_ID, spoofCount);
+        return SPOOFED_BUNDLE_ID;
+    }
+
+    // Otherwise, return the original bundle identifier.
+    return origBundleId;
 }
 
-// Hooking an instance method with an argument.
-- (void)messageName:(int)argument {
-	%log; // Write a message about this call, including its class, name and arguments, to the system log.
+- (id)objectForInfoDictionaryKey:(NSString *)key {
+    // Use a static counter for the objectForInfoDictionaryKey: hook.
+    static int spoofInfoCount = 0;
 
-	%orig; // Call through to the original function with its original arguments.
-	%orig(nil); // Call through to the original function with a custom argument.
+    if ([key isEqualToString:@"CFBundleIdentifier"]) {
+        NSString *origValue = %orig;
+        if ([origValue isEqualToString:@"REAL_BUNDLE_ID"] && spoofInfoCount > -1) {
+            spoofInfoCount++;
+            NSLog(@"Spoofing InfoDict key %@ from %@ to %@ (spoof count: %d)", key, origValue, SPOOFED_BUNDLE_ID, spoofInfoCount);
+            return SPOOFED_BUNDLE_ID;
+        }
+    }
 
-	// If you use %orig(), you MUST supply all arguments (except for self and _cmd, the automatically generated ones.)
+    return %orig;
 }
 
-// Hooking an instance method with no arguments.
-- (id)noArguments {
-	%log;
-	id awesome = %orig;
-	[awesome doSomethingElse];
-
-	return awesome;
-}
-
-// Always make sure you clean up after yourself; Not doing so could have grave consequences!
 %end
-*/

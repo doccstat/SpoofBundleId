@@ -1,1 +1,1 @@
-{ Filter = { Bundles = ( "com.apple.springboard" ); }; }
+{ Filter = { Bundles = ( "REAL_BUNDLE_ID" ); }; }

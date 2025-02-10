@@ -1,8 +1,8 @@
 Package: com.lixingchi.spoofbundleid
 Name: SpoofBundleId
 Version: 0.0.1
-Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Architecture: iphoneos-arm64
+Description: Spoof the bundle ID. CHANGE THE FOLLOWING: EXECUTABLE_NAME, REAL_BUNDLE_ID AND ORIGINAL_BUNDLE_ID. Modify `spoofCount > -1` to limit the number of spoofs. Side effects: Apps MAY not be able to request permissions properly.
 Maintainer: Xingchi Li
 Author: Xingchi Li
 Section: Tweaks
